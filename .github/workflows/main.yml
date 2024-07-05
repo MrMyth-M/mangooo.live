@@ -27,25 +27,25 @@ jobs:
         run: |
           git config --global user.email "deployment@mangooo.live"
           git config --global user.name "mangooo.live-deployment"
-        working-directory: ./mangooo-live
+        working-directory: ./mangooo.live
 
       - name: Change directory to Angular app
         run: cd app
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./mangooo-live
+        working-directory: ./mangooo.live
 
       - name: Build the project
-        run: npx ng build --output-path=dist/mangooo-live/browser
-        working-directory: ./mangooo-live
+        run: npx ng build --output-path=dist/mangooo.live/browser
+        working-directory: ./mangooo.live
 
       - name: Install angular-cli-ghpages globally
         run: npm install -g angular-cli-ghpages
 
       - name: Deploy to GitHub Pages
-        run: npx ng deploy --dir=./dist/mangooo-live/browser --no-silent
-        working-directory: ./mangooo-live
+        run: npx ng deploy --dir=./dist/mangooo.live/browser --no-silent
+        working-directory: ./mangooo.live
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
