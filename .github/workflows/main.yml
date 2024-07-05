@@ -47,6 +47,8 @@ jobs:
 
       - name: Commit and Push changes to gh-pages
         run: |
+          git config --global user.email "deployment@mangooo.live"
+          git config --global user.name "mangooo.live-deployment"
           git add .
           git commit -m "Deploy to GitHub Pages"
           git push origin gh-pages
