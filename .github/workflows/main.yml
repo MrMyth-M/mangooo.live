@@ -33,8 +33,7 @@ jobs:
 
       - name: Move contents one directory up
         run: |
-          shopt -s dotglob
-          mv dist/mangooo.live/browser/* dist/mangooo.live/
+          rsync -a dist/mangooo.live/browser/ dist/mangooo.live/
         working-directory: ./app
 
       - name: Deploy to GitHub Pages
