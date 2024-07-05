@@ -32,7 +32,9 @@ jobs:
         working-directory: ./app
 
       - name: Move contents one directory up
-        run: mv dist/mangooo.live/browser/* dist/mangooo.live/
+        run: |
+          shopt -s dotglob
+          mv dist/mangooo.live/browser/* dist/mangooo.live/
         working-directory: ./app
 
       - name: Deploy to GitHub Pages
