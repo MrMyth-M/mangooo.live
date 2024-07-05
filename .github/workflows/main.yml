@@ -31,20 +31,20 @@ jobs:
         run: npm run build -- --output-path=dist/mangooo.live/browser
         working-directory: ./app
 
+      - name: Move built files to root
+        run: |
+          mkdir temp-gh-pages
+          mv dist/mangooo.live/browser/* temp-gh-pages/
+        working-directory: ./app
+
       - name: Deploy to GitHub Pages
         run: |
-          npx angular-cli-ghpages --dir=dist/mangooo.live/browser --no-silent --name="mangooo.live-deployment" --email="deployment@mangooo.live"
+          npx angular-cli-ghpages --dir=temp-gh-pages --no-silent --name="mangooo.live-deployment" --email="deployment@mangooo.live"
         working-directory: ./app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Commit and Push changes to gh-pages
+      - name: Clean up temporary directory
         run: |
-          git config --global user.email "deployment@mangooo.live"
-          git config --global user.name "mangooo.live-deployment"
-          git add -A
-          git commit -m "Deploy to GitHub Pages"
-          git push origin gh-pages
+          rm -rf temp-gh-pages
         working-directory: ./app
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
