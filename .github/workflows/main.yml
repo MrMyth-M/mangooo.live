@@ -25,27 +25,27 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --global user.email "deployment@realitycheck.events"
-          git config --global user.name "realitycheck-deployment"
+          git config --global user.email "deployment@mangooo.live"
+          git config --global user.name "mango-live"
 
       - name: Change directory to Angular app
         run: |
-          cd reality-check
+          cd app
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./reality-check
+        working-directory: ./app
 
       - name: Build the project
-        run: npx ng build --output-path=dist/reality-check/browser
-        working-directory: ./reality-check
+        run: npx ng build --output-path=dist/app/browser
+        working-directory: ./app
 
       - name: Install angular-cli-ghpages globally
         run: npm install -g angular-cli-ghpages
 
       - name: Deploy to GitHub Pages
-        run: npx ng deploy --dir=./dist/reality-check/browser --no-silent
-        working-directory: ./reality-check
+        run: npx ng deploy --dir=./dist/app/browser --no-silent
+        working-directory: ./app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -57,7 +57,7 @@ jobs:
 
       - name: Add CNAME to gh-pages
         run: |
-          echo "realitycheck.events" > ./gh-pages/CNAME
+          echo "mangooo.live" > ./gh-pages/CNAME
 
       - name: Commit and Push CNAME
         run: |
