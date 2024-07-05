@@ -43,7 +43,7 @@ jobs:
         run: npm install -g angular-cli-ghpages
 
       - name: Deploy to GitHub Pages
-        run: npx ng deploy --dir=./dist/mangooo.live/browser --no-silent
+        run: npx ng deploy --dir=./dist/mangooo.live/browser --no-silent --repo=https://github.com/<your-username>/<your-repo>.git
         working-directory: ./app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
