@@ -27,7 +27,7 @@ jobs:
         run: |
           git config --global user.email "deployment@mangooo.live"
           git config --global user.name "mangolive-deployment"
-        working-directory: ./mango
+        working-directory: mango
 
       - name: Change directory to Angular app
         run: cd app
