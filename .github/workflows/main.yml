@@ -34,8 +34,21 @@ jobs:
       - name: Deploy to GitHub Pages
         run: |
           npx angular-cli-ghpages --dir=./dist/mangooo.live/browser --no-silent --name="mangooo.live-deployment" --email="deployment@mangooo.live"
-          mv ./dist/mangooo.live/browser/* ./
-          touch .nojekyll
         working-directory: ./app
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Move built files to root and preserve CNAME
+        run: |
+          mv dist/mangooo.live/browser/* .
+          touch .nojekyll
+          echo "www.mangooo.live" > CNAME
+        working-directory: ./app
+
+      - name: Commit and Push changes to gh-pages
+        run: |
+          git add .
+          git commit -m "Deploy to GitHub Pages"
+          git push origin gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
