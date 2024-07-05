@@ -31,16 +31,20 @@ jobs:
         run: npm run build -- --output-path=dist/mangooo.live/browser
         working-directory: ./app
 
+      - name: Move contents one directory up
+        run: mv dist/mangooo.live/browser/* dist/mangooo.live/
+        working-directory: ./app
+
       - name: Deploy to GitHub Pages
         run: |
-          npx angular-cli-ghpages --dir=./dist/mangooo.live/browser --no-silent --name="mangooo.live-deployment" --email="deployment@mangooo.live"
+          npx angular-cli-ghpages --dir=./dist/mangooo.live --no-silent --name="mangooo.live-deployment" --email="deployment@mangooo.live"
         working-directory: ./app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Move built files to root and preserve CNAME
         run: |
-          mv dist/mangooo.live/browser/* .
+          mv dist/mangooo.live/* .
           touch .nojekyll
           echo "www.mangooo.live" > CNAME
         working-directory: ./app
