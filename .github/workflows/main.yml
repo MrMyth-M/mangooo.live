@@ -28,9 +28,6 @@ jobs:
           git config --global user.email "deployment@mangooo.live"
           git config --global user.name "mangooo.live-deployment"
 
-      - name: Change directory to Angular app
-        run: cd app
-
       - name: Install dependencies
         run: npm install
         working-directory: ./app
@@ -43,7 +40,7 @@ jobs:
         run: npm install -g angular-cli-ghpages
 
       - name: Deploy to GitHub Pages
-        run: npx ng deploy --dir=./dist/mangooo.live/browser --no-silent --repo=https://github.com/MrMyth-M/mangooo.live.git
+        run: npx angular-cli-ghpages --dir=./dist/mangooo.live/browser --no-silent
         working-directory: ./app
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -56,7 +53,7 @@ jobs:
 
       - name: Add CNAME to gh-pages
         run: |
-          echo "mangooo.live" > ./gh-pages/CNAME
+          echo "www.mangooo.live" > ./gh-pages/CNAME
 
       - name: Commit and Push CNAME
         run: |
