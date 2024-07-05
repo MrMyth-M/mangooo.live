@@ -23,28 +23,49 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Configure Git
+        run: |
+          git config --global user.email "deployment@mangooo.live"
+          git config --global user.name "mangolive-deployment"
+        working-directory: ./mango
+
+      - name: Change directory to Angular app
+        run: cd app
+
       - name: Install dependencies
         run: npm install
-        working-directory: ./app
+        working-directory: ./mango
 
       - name: Build the project
-        run: npm run build -- --output-path=dist/mangooo.live/browser
-        working-directory: ./app
+        run: npx ng build --output-path=dist/mango/browser
+        working-directory: ./mango
 
-      - name: Move built files to root
-        run: |
-          mkdir temp-gh-pages
-          mv dist/mangooo.live/browser/* temp-gh-pages/
-        working-directory: ./app
+      - name: Install angular-cli-ghpages globally
+        run: npm install -g angular-cli-ghpages
 
       - name: Deploy to GitHub Pages
-        run: |
-          npx angular-cli-ghpages --dir=temp-gh-pages --no-silent --name="mangooo.live-deployment" --email="deployment@mangooo.live"
-        working-directory: ./app
+        run: npx ng deploy --dir=./dist/mango/browser --no-silent
+        working-directory: ./mango
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Clean up temporary directory
+        # Checkout and add the CNAME file to make the deployment work
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v3
+        with:
+          ref: 'gh-pages'
+          path: 'gh-pages'
+
+      - name: Add CNAME to gh-pages
         run: |
-          rm -rf temp-gh-pages
-        working-directory: ./app
+          echo "mangooo.live" > ./CNAME
+        working-directory: ./gh-pages
+
+      - name: Commit and Push CNAME
+        run: |
+          cd ./gh-pages
+          git add CNAME
+          git commit -m "Deploy app & add CNAME for custom domain"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
