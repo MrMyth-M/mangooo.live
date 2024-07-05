@@ -23,43 +23,19 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Configure Git
-        run: |
-          git config --global user.email "deployment@mangooo.live"
-          git config --global user.name "mangooo.live-deployment"
-
       - name: Install dependencies
         run: npm install
         working-directory: ./app
 
       - name: Build the project
-        run: npx ng build --output-path=dist/mangooo.live/browser
+        run: npm run build -- --output-path=dist/mangooo.live/browser
         working-directory: ./app
-
-      - name: Install angular-cli-ghpages globally
-        run: npm install -g angular-cli-ghpages
 
       - name: Deploy to GitHub Pages
-        run: npx angular-cli-ghpages --dir=./dist/mangooo.live/browser --no-silent
+        run: |
+          npx angular-cli-ghpages --dir=./dist/mangooo.live/browser --no-silent --name="mangooo.live-deployment" --email="deployment@mangooo.live"
+          mv ./dist/mangooo.live/browser/* ./
+          touch .nojekyll
         working-directory: ./app
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v3
-        with:
-          ref: 'gh-pages'
-          path: 'gh-pages'
-
-      - name: Add CNAME to gh-pages
-        run: |
-          echo "www.mangooo.live" > ./gh-pages/CNAME
-
-      - name: Commit and Push CNAME
-        run: |
-          cd ./gh-pages
-          git add CNAME
-          git commit -m "Deploy app & add CNAME for custom domain"
-          git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
