@@ -1,0 +1,69 @@
+name: Deploy Angular app to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Configure Git
+        run: |
+          git config --global user.email "deployment@mangooo.live"
+          git config --global user.name "mango-live"
+
+      - name: Change directory to Angular app
+        run: |
+          cd app
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./app
+
+      - name: Build the project
+        run: npx ng build --output-path=dist/app/browser
+        working-directory: ./app
+
+      - name: Install angular-cli-ghpages globally
+        run: npm install -g angular-cli-ghpages
+
+      - name: Deploy to GitHub Pages
+        run: npx ng deploy --dir=./dist/app/browser --no-silent --repo=https://github.com/MrMyth-M/mangooo.live.git
+        working-directory: ./app
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v3
+        with:
+          ref: 'gh-pages'
+          path: 'gh-pages'
+
+      - name: Add CNAME to gh-pages
+        run: |
+          echo "mangooo.live" > ./gh-pages/CNAME
+
+      - name: Commit and Push CNAME
+        run: |
+          cd ./gh-pages
+          git add CNAME
+          git commit -m "Deploy app & add CNAME for custom domain"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
