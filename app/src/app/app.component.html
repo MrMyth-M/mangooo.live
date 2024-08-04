@@ -1,1 +1,30 @@
-<canvas #canvas id="game-canvas" width="720" height="480"></canvas>
+<div class="app">
+  <input id="text-input" type="password" [(ngModel)]="password">
+  <button id="play-button" class="play-button" (click)="initiateGameLogic()">Play</button>
+  <canvas #canvas id="game-canvas" width="720" height="480"></canvas>
+  <div class="upper-group">
+    <div class="legend">
+      <span>W, A, S, D - Movement</span>
+      <span>E - Interact</span>
+      <span>Shift - Sprint</span>
+    </div>
+    <div class="hidden-tips">
+      <span *ngFor="let tooltip of tooltips; let i = index" (click)="toggleTooltip(i)">
+        <div class="tip">
+          <b>> Tip {{ i + 1}}</b>
+          <hr>
+          <span *ngIf="tooltipRevealed[i]">{{ tooltip }}</span>
+        </div>
+      </span>
+    </div>
+  </div>
+
+  <div class="text-box" *ngIf="textDisplayService.isTextQueued()">
+    <span *ngIf="textDisplayService.isTextDisplaySet()"
+          class="typewriter">{{ textDisplayService.getTextDisplay() }}</span>
+    <img *ngIf="itemDisplayService.isDisplayItemSet()"
+         [src]="'assets/items/' + itemDisplayService.getCurrentDisplayItem() + '.png'"
+         class="text-box-image">
+  </div>
+  <video id="ending-video" class="hidden" preload="auto" src="assets/video/ending_sequence.mp4"></video>
+</div>
